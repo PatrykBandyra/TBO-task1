@@ -14,23 +14,17 @@ import java.util.stream.Collectors;
 public class StudentMapper {
 
     public static Student toEntity(CreateStudentDTO dto) {
-        Student student = new Student();
-        student.setName(dto.getName());
-        student.setEmail(dto.getEmail());
-        student.setBirthday(dto.getBirthday());
-
-        Address address = new Address();
-        address.setZipCode(dto.getZipCode());
-        address.setStreet(dto.getStreet());
-        address.setNumber(dto.getNumber());
-        address.setComplement(dto.getComplement());
-        address.setDistrict(dto.getDistrict());
-        address.setCity(dto.getCity());
-        address.setState(dto.getState());
+        Address address = new Address(
+                dto.getZipCode(),
+                dto.getStreet(),
+                dto.getNumber(),
+                dto.getComplement(),
+                dto.getDistrict(),
+                dto.getCity(),
+                dto.getState()
+        );
+        Student student = new Student(dto.getName(), dto.getEmail(), dto.getBirthday(), address);
         address.setStudent(student);
-
-        student.setAddress(address);
-
         return student;
     }
 
@@ -54,7 +48,7 @@ public class StudentMapper {
 
     public static List<StudentResponseDTO> toDTO(List<Student> students) {
         return students.stream()
-                .map(student -> toDTO(student))
+                .map(StudentMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
